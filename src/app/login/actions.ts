@@ -19,5 +19,5 @@ export async function loginAction(formData: FormData) {
     redirect('/login?error=invalid');
   }
 
-  redirect('/admin');
+  redirect('/dashboard');
 }

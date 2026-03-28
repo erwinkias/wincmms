@@ -11,7 +11,7 @@ import { ThemeToggle } from '@/components/theme-toggle';
 
 export default async function LoginPage({ searchParams }: { searchParams?: Promise<{ error?: string; registered?: string }> }) {
   const session = await getSession();
-  if (session?.user) redirect('/admin');
+  if (session?.user) redirect('/dashboard');
   const params = (await searchParams) ?? {};
 
   return (

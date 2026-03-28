@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { AppFooter } from '@/components/app-footer';
 
 const navItems = [
-  { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
+  { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/admin/master/users', label: 'Users', icon: ShieldUser },
   { href: '/admin/master/sites', label: 'Sites', icon: Settings2 },
   { href: '/admin/master/assets', label: 'Assets', icon: Wrench },
