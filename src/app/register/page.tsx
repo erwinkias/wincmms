@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import { Building2, ShieldCheck, Sparkles } from 'lucide-react';
+import { Building2, ShieldCheck, Users2 } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -15,44 +15,43 @@ export default async function RegisterPage({ searchParams }: { searchParams?: Pr
   const params = (await searchParams) ?? {};
 
   return (
-    <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-slate-50 px-4 py-10 dark:bg-slate-950">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(14,165,233,0.16),_transparent_26%),radial-gradient(circle_at_bottom_left,_rgba(99,102,241,0.16),_transparent_24%)]" />
+    <main className="relative flex min-h-screen items-center justify-center bg-slate-100 px-4 py-10 dark:bg-slate-950">
       <div className="absolute right-6 top-6 z-20">
         <ThemeToggle />
       </div>
 
-      <Card className="relative z-10 w-full max-w-5xl overflow-hidden border-slate-200/80 bg-white/95 shadow-2xl shadow-slate-200/60 backdrop-blur dark:border-slate-800 dark:bg-slate-900/95 dark:shadow-black/30">
-        <CardContent className="grid min-h-[660px] p-0 lg:grid-cols-[0.95fr_1.05fr]">
-          <div className="flex items-center justify-center p-6 sm:p-10 lg:p-12">
+      <Card className="w-full max-w-6xl overflow-hidden border-slate-200 bg-white shadow-xl dark:border-slate-800 dark:bg-slate-900">
+        <CardContent className="grid min-h-[660px] p-0 lg:grid-cols-[0.92fr_1.08fr]">
+          <div className="flex items-center justify-center p-6 sm:p-10 lg:p-14">
             <div className="w-full max-w-md">
               <div className="mb-8">
-                <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-primary dark:bg-primary/15">
-                  <ShieldCheck className="h-6 w-6" />
+                <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-900 text-white dark:bg-white dark:text-slate-900">
+                  <ShieldCheck className="h-5 w-5" />
                 </div>
-                <h2 className="mt-4 font-heading text-3xl font-bold tracking-tight">Create your account</h2>
-                <p className="mt-2 text-sm text-muted-foreground">
-                  Daftarkan akun baru untuk mulai mengelola request maintenance, asset, dan aktivitas kerja di WinCMMS.
+                <h2 className="mt-5 font-heading text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-50">Create account</h2>
+                <p className="mt-2 text-sm leading-6 text-slate-500 dark:text-slate-400">
+                  Daftarkan akun baru untuk mulai memakai WinCMMS dengan workspace yang lebih rapi dan profesional.
                 </p>
               </div>
 
               <form action={registerAction} className="space-y-5">
                 <div className="space-y-2">
                   <Label htmlFor="email">Email</Label>
-                  <Input id="email" name="email" type="email" required className="h-11 rounded-xl bg-slate-50 dark:bg-slate-950" />
+                  <Input id="email" name="email" type="email" required className="h-11 rounded-xl border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-950" />
                 </div>
                 <div className="grid gap-5 sm:grid-cols-2">
                   <div className="space-y-2">
                     <Label htmlFor="username">Username</Label>
-                    <Input id="username" name="username" required className="h-11 rounded-xl bg-slate-50 dark:bg-slate-950" />
+                    <Input id="username" name="username" required className="h-11 rounded-xl border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-950" />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="phone">Phone Number</Label>
-                    <Input id="phone" name="phone" required className="h-11 rounded-xl bg-slate-50 dark:bg-slate-950" />
+                    <Input id="phone" name="phone" required className="h-11 rounded-xl border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-950" />
                   </div>
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="password">Password</Label>
-                  <Input id="password" name="password" type="password" required className="h-11 rounded-xl bg-slate-50 dark:bg-slate-950" />
+                  <Input id="password" name="password" type="password" required className="h-11 rounded-xl border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-950" />
                 </div>
 
                 {params.error ? (
@@ -61,47 +60,43 @@ export default async function RegisterPage({ searchParams }: { searchParams?: Pr
                   </div>
                 ) : null}
 
-                <Button className="h-11 w-full rounded-xl text-base font-semibold shadow-lg shadow-primary/20" type="submit">
+                <Button className="h-11 w-full rounded-xl bg-slate-900 text-base font-semibold text-white hover:bg-slate-800 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-200" type="submit">
                   Create account
                 </Button>
               </form>
 
-              <div className="mt-8 border-t border-border pt-5 text-center text-sm text-muted-foreground">
+              <div className="mt-8 border-t border-slate-200 pt-5 text-center text-sm text-slate-500 dark:border-slate-800 dark:text-slate-400">
                 Sudah punya akun?{' '}
-                <Link href="/login" className="font-semibold text-primary hover:underline">
+                <Link href="/login" className="font-semibold text-slate-900 hover:underline dark:text-white">
                   Login di sini
                 </Link>
               </div>
             </div>
           </div>
 
-          <div className="hidden flex-col justify-between bg-gradient-to-br from-slate-900 via-slate-800 to-blue-900 p-10 text-white lg:flex">
-            <div>
-              <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-sm font-medium backdrop-blur">
-                <Sparkles className="h-4 w-4" />
-                Modern plant management
-              </div>
-              <div className="mt-10 max-w-md">
-                <h1 className="font-heading text-4xl font-bold leading-tight">
-                  From first request to complete maintenance visibility.
-                </h1>
-                <p className="mt-4 text-sm leading-7 text-slate-200">
-                  Register sekali, lalu Bos bisa mulai bangun workflow maintenance yang lebih tertata,
-                  terukur, dan gampang dipantau oleh supervisor maupun technician.
-                </p>
-              </div>
+          <div className="hidden border-l border-slate-200 bg-slate-950 text-white dark:border-slate-800 lg:flex lg:flex-col lg:justify-between">
+            <div className="p-10">
+              <p className="text-xs uppercase tracking-[0.28em] text-slate-400">Operational Access</p>
+              <h1 className="mt-6 max-w-lg font-heading text-4xl font-bold leading-tight">
+                Built for teams that prefer clarity over visual noise.
+              </h1>
+              <p className="mt-4 max-w-md text-sm leading-7 text-slate-300">
+                Tampilan yang lebih tenang, struktur yang jelas, dan role-based access yang cocok untuk kebutuhan plant, utility, dan maintenance office.
+              </p>
             </div>
 
-            <div className="grid gap-4 sm:grid-cols-2">
-              <div className="rounded-2xl border border-white/10 bg-white/10 p-5 backdrop-blur">
-                <Building2 className="h-5 w-5 text-cyan-300" />
-                <p className="mt-4 text-xl font-semibold">Multi site ready</p>
-                <p className="mt-2 text-sm text-slate-300">Cocok untuk plant, warehouse, building, dan utility area.</p>
+            <div className="grid gap-4 p-10 sm:grid-cols-2">
+              <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
+                <Building2 className="h-5 w-5 text-blue-400" />
+                <p className="mt-5 text-sm uppercase tracking-[0.2em] text-slate-400">Multi Site</p>
+                <p className="mt-2 text-xl font-semibold">Plant ready</p>
+                <p className="mt-2 text-sm text-slate-400">Support untuk site, area utility, workshop, dan warehouse.</p>
               </div>
-              <div className="rounded-2xl border border-white/10 bg-white/10 p-5 backdrop-blur">
-                <ShieldCheck className="h-5 w-5 text-indigo-300" />
-                <p className="mt-4 text-xl font-semibold">Role based access</p>
-                <p className="mt-2 text-sm text-slate-300">Admin, supervisor, technician, dan requester punya ruang kerja masing-masing.</p>
+              <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
+                <Users2 className="h-5 w-5 text-emerald-400" />
+                <p className="mt-5 text-sm uppercase tracking-[0.2em] text-slate-400">Role Access</p>
+                <p className="mt-2 text-xl font-semibold">Controlled workspace</p>
+                <p className="mt-2 text-sm text-slate-400">Admin, supervisor, technician, dan requester dengan akses yang terpisah jelas.</p>
               </div>
             </div>
           </div>
