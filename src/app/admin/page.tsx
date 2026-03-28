@@ -1,60 +1,71 @@
+import { UserRole } from '@prisma/client';
 import { AdminShell } from '@/components/admin-shell';
-import { StatCard } from '@/components/stat-card';
-import { SimpleTable } from '@/components/simple-table';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { db } from '@/lib/db';
 import { requireAdminAccess } from '@/lib/auth';
-
-const pendingWorkOrders = [
-  { wo: 'WO-2026-001', asset: 'Boiler Feed Pump', priority: 'High', status: 'Open' },
-  { wo: 'WO-2026-002', asset: 'Air Compressor #2', priority: 'Critical', status: 'Assigned' },
-  { wo: 'WO-2026-003', asset: 'Cooling Tower Fan', priority: 'Medium', status: 'Waiting Part' },
-];
 
 export default async function AdminDashboardPage() {
   await requireAdminAccess();
 
+  const [usersCount, sitesCount, assetsCount, partsCount, latestUsers] = await Promise.all([
+    db.user.count(),
+    db.site.count(),
+    db.asset.count(),
+    db.sparePart.count(),
+    db.user.findMany({ orderBy: { createdAt: 'desc' }, take: 5 }),
+  ]);
+
   return (
-    <AdminShell
-      title="Admin Dashboard"
-      description="Ringkasan awal operasional dan pintu masuk ke master data WinCMMS."
-    >
-      <div className="grid grid-4">
-        <StatCard title="Open Work Orders" value="18" subtitle="6 overdue, perlu follow-up" />
-        <StatCard title="Active Assets" value="124" subtitle="12 critical assets" />
-        <StatCard title="PM Due This Week" value="21" subtitle="5 sudah overdue" />
-        <StatCard title="Low Stock Parts" value="7" subtitle="2 item level kritis" />
+    <AdminShell title="Dashboard" description="Ringkasan operasional WinCMMS dengan data real dari database.">
+      <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+        <Card><CardHeader><CardDescription>Total Users</CardDescription><CardTitle className="text-3xl">{usersCount}</CardTitle></CardHeader></Card>
+        <Card><CardHeader><CardDescription>Total Sites</CardDescription><CardTitle className="text-3xl">{sitesCount}</CardTitle></CardHeader></Card>
+        <Card><CardHeader><CardDescription>Total Assets</CardDescription><CardTitle className="text-3xl">{assetsCount}</CardTitle></CardHeader></Card>
+        <Card><CardHeader><CardDescription>Total Spare Parts</CardDescription><CardTitle className="text-3xl">{partsCount}</CardTitle></CardHeader></Card>
       </div>
 
-      <div className="grid grid-2" style={{ marginTop: 16 }}>
-        <div className="card">
-          <h3>Quick Access</h3>
-          <p className="muted">Mulai dari master data supaya pondasi aplikasi rapi.</p>
-          <div className="inline-actions" style={{ marginTop: 14 }}>
-            <a className="btn btn-primary" href="/admin/master/users">Kelola Users</a>
-            <a className="btn btn-secondary" href="/admin/master/sites">Kelola Sites</a>
-            <a className="btn btn-secondary" href="/admin/master/assets">Kelola Assets</a>
-          </div>
-        </div>
+      <div className="mt-6 grid gap-6 xl:grid-cols-3">
+        <Card className="xl:col-span-2">
+          <CardHeader>
+            <CardTitle>Latest Users</CardTitle>
+            <CardDescription>Akun terbaru yang masuk ke sistem.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Name</TableHead>
+                  <TableHead>Email</TableHead>
+                  <TableHead>Role</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {latestUsers.map((user) => (
+                  <TableRow key={user.id}>
+                    <TableCell>{user.name}</TableCell>
+                    <TableCell>{user.email}</TableCell>
+                    <TableCell><Badge variant={user.role === UserRole.ADMIN ? 'default' : 'secondary'}>{user.role}</Badge></TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
 
-        <div className="card">
-          <h3>Role Access Summary</h3>
-          <ul className="muted" style={{ margin: 0, paddingLeft: 18 }}>
-            <li>Admin: full access ke seluruh menu admin</li>
-            <li>Supervisor: akses area admin dan master operasional</li>
-            <li>Technician: tidak boleh masuk area admin</li>
-          </ul>
-        </div>
-      </div>
-
-      <div style={{ marginTop: 16 }}>
-        <SimpleTable
-          columns={[
-            { key: 'wo', label: 'WO No' },
-            { key: 'asset', label: 'Asset' },
-            { key: 'priority', label: 'Priority' },
-            { key: 'status', label: 'Status' },
-          ]}
-          rows={pendingWorkOrders}
-        />
+        <Card>
+          <CardHeader>
+            <CardTitle>System Notes</CardTitle>
+            <CardDescription>Status fondasi MVP saat ini.</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-3 text-sm text-muted-foreground">
+            <p>• Auth sudah terhubung ke tabel User Prisma</p>
+            <p>• Register membuat akun role REQUESTER</p>
+            <p>• Master data users, sites, assets, dan spare parts sudah pakai database</p>
+            <p>• Dark theme aktif dan layout admin sudah lengkap</p>
+          </CardContent>
+        </Card>
       </div>
     </AdminShell>
   );

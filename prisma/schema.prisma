@@ -78,11 +78,12 @@ enum NotificationType {
 
 model User {
   id                   String               @id @default(cuid())
-  name                 String
   email                String               @unique
+  username             String               @unique
+  name                 String
+  phone                String?
   passwordHash         String
   role                 UserRole
-  phone                String?
   isActive             Boolean              @default(true)
   createdAt            DateTime             @default(now())
   updatedAt            DateTime             @updatedAt
@@ -101,6 +102,7 @@ model Site {
   name       String
   code       String               @unique
   address    String?
+  isActive   Boolean              @default(true)
   createdAt  DateTime             @default(now())
   updatedAt  DateTime             @updatedAt
   locations  Location[]
@@ -257,25 +259,25 @@ model WorkOrderPart {
 }
 
 model ChecklistTemplate {
-  id              String                  @id @default(cuid())
-  name            String
-  assetCategoryId String?
-  description     String?
-  createdAt       DateTime                @default(now())
-  updatedAt       DateTime                @updatedAt
-  assetCategory   AssetCategory?          @relation(fields: [assetCategoryId], references: [id])
-  items           ChecklistTemplateItem[]
-  pmSchedules     PMSchedule[]
+  id                  String                  @id @default(cuid())
+  name                String
+  assetCategoryId     String?
+  description         String?
+  createdAt           DateTime                @default(now())
+  updatedAt           DateTime                @updatedAt
+  assetCategory       AssetCategory?          @relation(fields: [assetCategoryId], references: [id])
+  items               ChecklistTemplateItem[]
+  pmSchedules         PMSchedule[]
 }
 
 model ChecklistTemplateItem {
-  id                 String                @id @default(cuid())
-  templateId         String
-  itemText           String
-  itemType           ChecklistItemType     @default(BOOLEAN)
-  isRequired         Boolean               @default(false)
-  sortOrder          Int                   @default(0)
-  template           ChecklistTemplate     @relation(fields: [templateId], references: [id])
+  id                  String                @id @default(cuid())
+  templateId          String
+  itemText            String
+  itemType            ChecklistItemType     @default(BOOLEAN)
+  isRequired          Boolean               @default(false)
+  sortOrder           Int                   @default(0)
+  template            ChecklistTemplate     @relation(fields: [templateId], references: [id])
   workOrderChecklists WorkOrderChecklist[]
 }
 

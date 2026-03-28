@@ -1,31 +1,42 @@
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
-
-export type AppRole = 'ADMIN' | 'SUPERVISOR' | 'TECHNICIAN' | 'REQUESTER';
+import { UserRole } from '@prisma/client';
+import { db } from '@/lib/db';
+import { verifyPassword } from '@/lib/password';
 
 export type SessionUser = {
   id: string;
   name: string;
   email: string;
-  role: AppRole;
+  username: string;
+  role: UserRole;
 };
-
-const demoUsers = [
-  { id: '1', name: 'Admin WinCMMS', email: 'admin@wincmms.local', password: 'admin123', role: 'ADMIN' as const },
-  { id: '2', name: 'Supervisor WinCMMS', email: 'supervisor@wincmms.local', password: 'supervisor123', role: 'SUPERVISOR' as const },
-  { id: '3', name: 'Technician WinCMMS', email: 'tech@wincmms.local', password: 'tech12345', role: 'TECHNICIAN' as const },
-];
 
 const SESSION_COOKIE = 'wincmms_session';
 
-export async function loginWithCredentials(email: string, password: string) {
-  const user = demoUsers.find((item) => item.email === email && item.password === password);
+export async function loginWithCredentials(identifier: string, password: string) {
+  const user = await db.user.findFirst({
+    where: {
+      OR: [{ email: identifier }, { username: identifier }],
+      isActive: true,
+    },
+  });
+
   if (!user) return false;
+
+  const valid = await verifyPassword(password, user.passwordHash);
+  if (!valid) return false;
 
   const cookieStore = await cookies();
   cookieStore.set(
     SESSION_COOKIE,
-    JSON.stringify({ id: user.id, name: user.name, email: user.email, role: user.role }),
+    JSON.stringify({
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      username: user.username,
+      role: user.role,
+    }),
     {
       httpOnly: true,
       sameSite: 'lax',
@@ -36,6 +47,25 @@ export async function loginWithCredentials(email: string, password: string) {
   );
 
   return true;
+}
+
+export async function registerUser(input: {
+  email: string;
+  username: string;
+  name: string;
+  phone?: string;
+  passwordHash: string;
+}) {
+  return db.user.create({
+    data: {
+      email: input.email,
+      username: input.username,
+      name: input.name,
+      phone: input.phone,
+      passwordHash: input.passwordHash,
+      role: UserRole.REQUESTER,
+    },
+  });
 }
 
 export async function logout() {
@@ -57,13 +87,7 @@ export async function getSessionUser(): Promise<SessionUser | null> {
 
 export async function requireAdminAccess() {
   const user = await getSessionUser();
-  if (!user) {
-    redirect('/login');
-  }
-
-  if (user.role !== 'ADMIN' && user.role !== 'SUPERVISOR') {
-    redirect('/login');
-  }
-
+  if (!user) redirect('/login');
+  if (user.role !== UserRole.ADMIN && user.role !== UserRole.SUPERVISOR) redirect('/login');
   return user;
 }

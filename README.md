@@ -1,23 +1,41 @@
 # WinCMMS
 
-WinCMMS adalah blueprint awal aplikasi **CMMS (Computerized Maintenance Management System)** berbasis **Next.js + MySQL + Prisma**.
+WinCMMS adalah aplikasi **CMMS (Computerized Maintenance Management System)** berbasis **Next.js + Prisma + MySQL** dengan dashboard admin modern, dark theme, dan fondasi auth berbasis database.
 
-Repository ini disiapkan sebagai fondasi **MVP1** yang berisi dokumentasi produk, desain relasi data, dan schema database awal.
+## Fitur Saat Ini
 
-## Isi Repository
-
-- `prd.md` — Product Requirements Document
-- `erd.md` — Entity Relationship Design
-- `prisma/schema.prisma` — schema Prisma awal untuk MVP1
-- `src/app/page.tsx` — landing page awal project
+- Auth login menggunakan **email atau username**
+- Register dengan field:
+  - email
+  - username
+  - phone number
+  - password
+- Logout
+- Forgot password page (placeholder MVP)
+- Dashboard admin dengan:
+  - sidebar
+  - navbar
+  - footer
+  - dark theme toggle
+- CRUD master data berbasis database untuk:
+  - users
+  - sites
+  - assets
+  - spare parts
+- Seeder akun default untuk setiap role
+- UI menggunakan pendekatan **shadcn/ui style components**
 
 ## Tech Stack
 
 - Next.js 15
-- TypeScript
-- MySQL
-- Prisma ORM
 - React 19
+- TypeScript
+- Prisma ORM
+- MySQL
+- Tailwind CSS v4
+- next-themes
+- bcryptjs
+- shadcn-style UI components
 
 ## Cara Install
 
@@ -36,21 +54,17 @@ npm install
 
 ### 3. Buat database MySQL
 
-Contoh:
-
 ```sql
 CREATE DATABASE wincmms;
 ```
 
-### 4. Siapkan environment file
+### 4. Siapkan environment
 
 ```bash
 cp .env.example .env
 ```
 
-Lalu isi `DATABASE_URL` sesuai koneksi MySQL lokal/server Bos.
-
-Contoh:
+Isi `DATABASE_URL`:
 
 ```env
 DATABASE_URL="mysql://root:password@localhost:3306/wincmms"
@@ -68,19 +82,38 @@ npm run prisma:generate
 npm run prisma:push
 ```
 
-### 7. Jalankan aplikasi
+### 7. Jalankan seeder
+
+```bash
+npm run prisma:seed
+```
+
+### 8. Jalankan aplikasi
 
 ```bash
 npm run dev
 ```
 
-Buka di browser:
+Akses:
+- `http://localhost:3000`
+- login: `http://localhost:3000/login`
+- register: `http://localhost:3000/register`
+
+## Default Seeder Accounts
+
+Password default semua akun seed:
 
 ```bash
-http://localhost:3000
+password123
 ```
 
-## Script yang Tersedia
+Akun default:
+- Admin → `admin@wincmms.local` / `admin`
+- Supervisor → `supervisor@wincmms.local` / `supervisor`
+- Technician → `technician@wincmms.local` / `technician`
+- Requester → `requester@wincmms.local` / `requester`
+
+## Script
 
 ```bash
 npm run dev
@@ -89,28 +122,12 @@ npm run start
 npm run prisma:generate
 npm run prisma:push
 npm run prisma:migrate
+npm run prisma:seed
 npm run prisma:studio
 ```
 
-## Scope MVP1 Saat Ini
-
-MVP1 saat ini fokus pada:
-- perumusan kebutuhan produk
-- pemetaan relasi entitas
-- penyiapan schema database awal
-- scaffold awal Next.js
-
-Belum mencakup:
-- auth implementation
-- CRUD UI lengkap
-- API route lengkap
-- dashboard operasional final
-- reporting final
-
 ## Catatan
 
-Kalau review Bos sudah oke, next step yang paling masuk akal:
-1. implement auth + role
-2. buat master data module
-3. buat maintenance request + work order flow
-4. lanjut ke dashboard dan PM module
+- Forgot password masih placeholder untuk MVP
+- CRUD saat ini fokus pada create + read data master
+- Next step yang masuk akal: edit/delete master data, request/work order module, dan auth session yang lebih lengkap
