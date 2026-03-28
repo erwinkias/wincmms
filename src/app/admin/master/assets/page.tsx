@@ -19,7 +19,7 @@ export default async function AdminMasterAssetsPage() {
 
   return (
     <AdminShell title="Master Assets" description="Kelola daftar asset dan statusnya.">
-      <div className="grid gap-6 xl:grid-cols-[420px_1fr]">
+      <div className="form-grid-asset">
         <Card>
           <CardHeader><CardTitle>Add Asset</CardTitle></CardHeader>
           <CardContent>

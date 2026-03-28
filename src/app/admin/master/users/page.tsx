@@ -15,7 +15,7 @@ export default async function AdminMasterUsersPage() {
 
   return (
     <AdminShell title="Master Users" description="Kelola user, role, dan akses aplikasi.">
-      <div className="grid gap-6 xl:grid-cols-[380px_1fr]">
+      <div className="form-grid-2">
         <Card>
           <CardHeader><CardTitle>Add User</CardTitle></CardHeader>
           <CardContent>

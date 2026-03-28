@@ -7,20 +7,20 @@ import { ThemeToggle } from '@/components/theme-toggle';
 
 export default function ForgotPasswordPage() {
   return (
-    <main className="flex min-h-screen items-center justify-center bg-muted/40 p-6">
-      <div className="absolute right-6 top-6"><ThemeToggle /></div>
-      <Card className="w-full max-w-md">
+    <main className="page-center">
+      <div className="top-right"><ThemeToggle /></div>
+      <Card className="max-w-md w-full">
         <CardHeader>
-          <CardTitle className="text-2xl">Forgot Password</CardTitle>
+          <CardTitle className="text-2xl font-heading font-bold">Forgot Password</CardTitle>
           <CardDescription>Placeholder reset password flow untuk MVP awal.</CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="space-y-2">
+        <CardContent className="stack stack-4">
+          <div className="stack stack-2">
             <Label htmlFor="email">Email</Label>
             <Input id="email" type="email" placeholder="email@company.com" />
           </div>
           <Button className="w-full" type="button">Send reset link</Button>
-          <p className="text-sm text-muted-foreground">Balik ke <Link href="/login">login</Link></p>
+          <p className="text-sm muted">Balik ke <Link href="/login">login</Link></p>
         </CardContent>
       </Card>
     </main>

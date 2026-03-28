@@ -15,7 +15,7 @@ export default async function AdminMasterSitesPage() {
 
   return (
     <AdminShell title="Master Sites" description="Kelola site utama operasional.">
-      <div className="grid gap-6 xl:grid-cols-[380px_1fr]">
+      <div className="form-grid-2">
         <Card>
           <CardHeader><CardTitle>Add Site</CardTitle></CardHeader>
           <CardContent>

@@ -19,15 +19,15 @@ export default async function AdminDashboardPage() {
 
   return (
     <AdminShell title="Dashboard" description="Ringkasan operasional WinCMMS dengan data real dari database.">
-      <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
-        <Card><CardHeader><CardDescription>Total Users</CardDescription><CardTitle className="text-3xl">{usersCount}</CardTitle></CardHeader></Card>
-        <Card><CardHeader><CardDescription>Total Sites</CardDescription><CardTitle className="text-3xl">{sitesCount}</CardTitle></CardHeader></Card>
-        <Card><CardHeader><CardDescription>Total Assets</CardDescription><CardTitle className="text-3xl">{assetsCount}</CardTitle></CardHeader></Card>
-        <Card><CardHeader><CardDescription>Total Spare Parts</CardDescription><CardTitle className="text-3xl">{partsCount}</CardTitle></CardHeader></Card>
+      <div className="card-grid-4">
+        <Card><CardHeader><CardDescription>Total Users</CardDescription><CardTitle className="text-3xl font-heading">{usersCount}</CardTitle></CardHeader></Card>
+        <Card><CardHeader><CardDescription>Total Sites</CardDescription><CardTitle className="text-3xl font-heading">{sitesCount}</CardTitle></CardHeader></Card>
+        <Card><CardHeader><CardDescription>Total Assets</CardDescription><CardTitle className="text-3xl font-heading">{assetsCount}</CardTitle></CardHeader></Card>
+        <Card><CardHeader><CardDescription>Total Spare Parts</CardDescription><CardTitle className="text-3xl font-heading">{partsCount}</CardTitle></CardHeader></Card>
       </div>
 
-      <div className="mt-6 grid gap-6 xl:grid-cols-3">
-        <Card className="xl:col-span-2">
+      <div className="card-grid-2" style={{ marginTop: 24 }}>
+        <Card>
           <CardHeader>
             <CardTitle>Latest Users</CardTitle>
             <CardDescription>Akun terbaru yang masuk ke sistem.</CardDescription>
@@ -46,7 +46,7 @@ export default async function AdminDashboardPage() {
                   <TableRow key={user.id}>
                     <TableCell>{user.name}</TableCell>
                     <TableCell>{user.email}</TableCell>
-                    <TableCell><Badge variant={user.role === UserRole.ADMIN ? 'default' : 'secondary'}>{user.role}</Badge></TableCell>
+                    <TableCell><Badge>{user.role === UserRole.ADMIN ? 'ADMIN' : user.role}</Badge></TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -59,7 +59,7 @@ export default async function AdminDashboardPage() {
             <CardTitle>System Notes</CardTitle>
             <CardDescription>Status fondasi MVP saat ini.</CardDescription>
           </CardHeader>
-          <CardContent className="space-y-3 text-sm text-muted-foreground">
+          <CardContent className="stack stack-3 muted text-sm">
             <p>• Auth sudah terhubung ke tabel User Prisma</p>
             <p>• Register membuat akun role REQUESTER</p>
             <p>• Master data users, sites, assets, dan spare parts sudah pakai database</p>

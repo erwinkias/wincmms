@@ -15,7 +15,7 @@ export default async function AdminMasterSparePartsPage() {
 
   return (
     <AdminShell title="Master Spare Parts" description="Kelola stock dan part master.">
-      <div className="grid gap-6 xl:grid-cols-[380px_1fr]">
+      <div className="form-grid-2">
         <Card>
           <CardHeader><CardTitle>Add Spare Part</CardTitle></CardHeader>
           <CardContent>
