@@ -85,9 +85,14 @@ export async function getSessionUser(): Promise<SessionUser | null> {
   }
 }
 
-export async function requireAdminAccess() {
+export async function requireLogin() {
   const user = await getSessionUser();
   if (!user) redirect('/login');
-  if (user.role !== UserRole.ADMIN && user.role !== UserRole.SUPERVISOR) redirect('/login');
+  return user;
+}
+
+export async function requireAdminAccess() {
+  const user = await requireLogin();
+  if (user.role !== UserRole.ADMIN && user.role !== UserRole.SUPERVISOR) redirect('/dashboard');
   return user;
 }
