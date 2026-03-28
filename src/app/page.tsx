@@ -1,13 +1,21 @@
+import Link from 'next/link';
+
 export default function HomePage() {
   return (
-    <main style={{ padding: '40px', fontFamily: 'Arial, sans-serif' }}>
-      <h1>WinCMMS MVP1</h1>
-      <p>Blueprint awal CMMS berbasis Next.js, MySQL, dan Prisma.</p>
-      <ul>
-        <li>Lihat <code>prd.md</code> untuk Product Requirements Document</li>
-        <li>Lihat <code>erd.md</code> untuk Entity Relationship Design</li>
-        <li>Lihat <code>prisma/schema.prisma</code> untuk schema database MVP1</li>
-      </ul>
+    <main className="auth-shell">
+      <div className="auth-card">
+        <h1>WinCMMS</h1>
+        <p className="muted">
+          Pondasi awal CMMS untuk maintenance, asset tracking, work order, dan preventive maintenance.
+        </p>
+        <div className="notice" style={{ margin: '16px 0' }}>
+          MVP1 sekarang sudah punya auth base, role base, dan halaman admin/master awal.
+        </div>
+        <div className="inline-actions">
+          <Link className="btn btn-primary" href="/login">Masuk</Link>
+          <Link className="btn btn-secondary" href="/admin">Buka Admin</Link>
+        </div>
+      </div>
     </main>
   );
 }
