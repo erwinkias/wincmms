@@ -1,20 +1,20 @@
 import * as React from 'react';
 import { cn } from '@/lib/utils';
 
-function Card({ className, ...props }: React.ComponentProps<'div'>) {
-  return <div className={cn('rounded-xl border bg-card text-card-foreground shadow-sm', className)} {...props} />;
+function Card({ className, style, ...props }: React.ComponentProps<'div'>) {
+  return <div className={cn('rounded-xl border shadow-sm', className)} style={{ background: 'var(--card)', color: 'var(--card-foreground)', borderColor: 'var(--border)', ...style }} {...props} />;
 }
 
 function CardHeader({ className, ...props }: React.ComponentProps<'div'>) {
-  return <div className={cn('flex flex-col space-y-1.5 p-6', className)} {...props} />;
+  return <div className={cn('flex flex-col p-6', className)} {...props} />;
 }
 
 function CardTitle({ className, ...props }: React.ComponentProps<'div'>) {
-  return <div className={cn('font-semibold leading-none tracking-tight', className)} {...props} />;
+  return <div className={cn('font-semibold tracking-tight', className)} {...props} />;
 }
 
-function CardDescription({ className, ...props }: React.ComponentProps<'div'>) {
-  return <div className={cn('text-sm text-muted-foreground', className)} {...props} />;
+function CardDescription({ className, style, ...props }: React.ComponentProps<'div'>) {
+  return <div className={cn('text-sm', className)} style={{ color: 'var(--muted-foreground)', ...style }} {...props} />;
 }
 
 function CardContent({ className, ...props }: React.ComponentProps<'div'>) {

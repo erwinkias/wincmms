@@ -10,17 +10,11 @@ export function ThemeToggle() {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => setMounted(true), []);
-
   if (!mounted) return null;
 
   return (
-    <Button
-      variant="outline"
-      size="sm"
-      type="button"
-      onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-    >
-      {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+    <Button variant="outline" size="sm" type="button" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>
+      {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
       <span>{theme === 'dark' ? 'Light' : 'Dark'}</span>
     </Button>
   );
