@@ -1,65 +1,69 @@
-import type { NextAuthOptions } from 'next-auth';
-import CredentialsProvider from 'next-auth/providers/credentials';
-import { z } from 'zod';
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
+
+export type AppRole = 'ADMIN' | 'SUPERVISOR' | 'TECHNICIAN' | 'REQUESTER';
+
+export type SessionUser = {
+  id: string;
+  name: string;
+  email: string;
+  role: AppRole;
+};
 
 const demoUsers = [
-  { id: '1', name: 'Admin WinCMMS', email: 'admin@wincmms.local', password: 'admin123', role: 'ADMIN' },
-  { id: '2', name: 'Supervisor WinCMMS', email: 'supervisor@wincmms.local', password: 'supervisor123', role: 'SUPERVISOR' },
-  { id: '3', name: 'Technician WinCMMS', email: 'tech@wincmms.local', password: 'tech12345', role: 'TECHNICIAN' },
+  { id: '1', name: 'Admin WinCMMS', email: 'admin@wincmms.local', password: 'admin123', role: 'ADMIN' as const },
+  { id: '2', name: 'Supervisor WinCMMS', email: 'supervisor@wincmms.local', password: 'supervisor123', role: 'SUPERVISOR' as const },
+  { id: '3', name: 'Technician WinCMMS', email: 'tech@wincmms.local', password: 'tech12345', role: 'TECHNICIAN' as const },
 ];
 
-export const authOptions: NextAuthOptions = {
-  pages: {
-    signIn: '/login',
-  },
-  session: {
-    strategy: 'jwt',
-  },
-  providers: [
-    CredentialsProvider({
-      name: 'Credentials',
-      credentials: {
-        email: { label: 'Email', type: 'email' },
-        password: { label: 'Password', type: 'password' },
-      },
-      async authorize(credentials) {
-        const parsed = z
-          .object({
-            email: z.email(),
-            password: z.string().min(6),
-          })
-          .safeParse(credentials);
+const SESSION_COOKIE = 'wincmms_session';
 
-        if (!parsed.success) return null;
+export async function loginWithCredentials(email: string, password: string) {
+  const user = demoUsers.find((item) => item.email === email && item.password === password);
+  if (!user) return false;
 
-        const user = demoUsers.find(
-          (item) => item.email === parsed.data.email && item.password === parsed.data.password,
-        );
-
-        if (!user) return null;
-
-        return {
-          id: user.id,
-          name: user.name,
-          email: user.email,
-          role: user.role,
-        } as any;
-      },
-    }),
-  ],
-  callbacks: {
-    async jwt({ token, user }) {
-      if (user) {
-        token.role = (user as any).role;
-      }
-      return token;
+  const cookieStore = await cookies();
+  cookieStore.set(
+    SESSION_COOKIE,
+    JSON.stringify({ id: user.id, name: user.name, email: user.email, role: user.role }),
+    {
+      httpOnly: true,
+      sameSite: 'lax',
+      path: '/',
+      secure: false,
+      maxAge: 60 * 60 * 24,
     },
-    async session({ session, token }) {
-      if (session.user) {
-        (session.user as any).id = token.sub;
-        (session.user as any).role = token.role;
-      }
-      return session;
-    },
-  },
-};
+  );
+
+  return true;
+}
+
+export async function logout() {
+  const cookieStore = await cookies();
+  cookieStore.delete(SESSION_COOKIE);
+}
+
+export async function getSessionUser(): Promise<SessionUser | null> {
+  const cookieStore = await cookies();
+  const raw = cookieStore.get(SESSION_COOKIE)?.value;
+  if (!raw) return null;
+
+  try {
+    return JSON.parse(raw) as SessionUser;
+  } catch {
+    return null;
+  }
+}
+
+export async function requireAdminAccess() {
+  const user = await getSessionUser();
+  if (!user) {
+    redirect('/login');
+  }
+
+  if (user.role !== 'ADMIN' && user.role !== 'SUPERVISOR') {
+    redirect('/login');
+  }
+
+  return user;
+}

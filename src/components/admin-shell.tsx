@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { getSession } from '@/lib/session';
+import { logoutAction } from '@/app/logout/actions';
 
 const navItems = [
   { href: '/admin', label: 'Dashboard' },
@@ -27,9 +28,9 @@ export async function AdminShell({
           <div className="brand">WinCMMS Admin</div>
           <div className="muted">Role: {(session?.user as any)?.role ?? 'GUEST'}</div>
         </div>
-        <div className="inline-actions">
-          <Link className="btn btn-secondary" href="/api/auth/signout">Logout</Link>
-        </div>
+        <form action={logoutAction}>
+          <button className="btn btn-secondary" type="submit">Logout</button>
+        </form>
       </header>
       <div className="container">
         <aside className="sidebar">

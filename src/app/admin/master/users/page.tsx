@@ -1,5 +1,6 @@
 import { AdminShell } from '@/components/admin-shell';
 import { SimpleTable } from '@/components/simple-table';
+import { requireAdminAccess } from '@/lib/auth';
 
 const users = [
   { name: 'Admin WinCMMS', email: 'admin@wincmms.local', role: 'ADMIN', status: 'Active' },
@@ -8,7 +9,9 @@ const users = [
   { name: 'Requester Line A', email: 'requester@wincmms.local', role: 'REQUESTER', status: 'Inactive' },
 ];
 
-export default function AdminMasterUsersPage() {
+export default async function AdminMasterUsersPage() {
+  await requireAdminAccess();
+
   return (
     <AdminShell
       title="Master Users"

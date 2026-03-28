@@ -1,6 +1,7 @@
 import { AdminShell } from '@/components/admin-shell';
 import { StatCard } from '@/components/stat-card';
 import { SimpleTable } from '@/components/simple-table';
+import { requireAdminAccess } from '@/lib/auth';
 
 const pendingWorkOrders = [
   { wo: 'WO-2026-001', asset: 'Boiler Feed Pump', priority: 'High', status: 'Open' },
@@ -8,7 +9,9 @@ const pendingWorkOrders = [
   { wo: 'WO-2026-003', asset: 'Cooling Tower Fan', priority: 'Medium', status: 'Waiting Part' },
 ];
 
-export default function AdminDashboardPage() {
+export default async function AdminDashboardPage() {
+  await requireAdminAccess();
+
   return (
     <AdminShell
       title="Admin Dashboard"
