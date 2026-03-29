@@ -1,7 +1,7 @@
 import { AdminShell } from '@/components/admin-shell';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { DataTable } from '@/components/ui/data-table';
 import { requireAdminAccess } from '@/lib/auth';
 import { db } from '@/lib/db';
 import { CircleUserRound, Shield, UserCog, Wrench } from 'lucide-react';
@@ -25,59 +25,59 @@ export default async function ListUserPage() {
   const users = await db.user.findMany({ orderBy: { createdAt: 'desc' } });
 
   return (
-    <AdminShell title="List User" description="Daftar seluruh user dalam sistem dengan tampilan table yang lebih rapi dan informatif.">
+    <AdminShell title="List User" description="Daftar seluruh user dalam sistem dengan tampilan data table yang lebih rapi dan informatif.">
       <Card className="rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
         <CardHeader>
           <CardTitle className="font-heading text-lg">List User</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-800">
-            <Table>
-              <TableHeader>
-                <TableRow className="bg-slate-50 dark:bg-slate-900">
-                  <TableHead>User</TableHead>
-                  <TableHead>Email</TableHead>
-                  <TableHead>Username</TableHead>
-                  <TableHead>Phone</TableHead>
-                  <TableHead>Role</TableHead>
-                  <TableHead>Status</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {users.map((user) => {
+          <DataTable
+            title="User Directory"
+            searchPlaceholder="Cari nama, email, username..."
+            data={users}
+            searchKeys={['name', 'email', 'username', 'role']}
+            columns={[
+              {
+                key: 'name',
+                header: 'User',
+                render: (user) => {
                   const RoleIcon = getRoleIcon(user.role);
                   return (
-                    <TableRow key={user.id}>
-                      <TableCell>
-                        <div className="flex items-center gap-3">
-                          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-200">
-                            <RoleIcon className="h-4 w-4" />
-                          </div>
-                          <div>
-                            <div className="font-medium text-slate-900 dark:text-white">{user.name}</div>
-                            <div className="text-xs text-slate-500 dark:text-slate-400">ID: {user.id.slice(0, 8)}...</div>
-                          </div>
-                        </div>
-                      </TableCell>
-                      <TableCell>{user.email}</TableCell>
-                      <TableCell>{user.username}</TableCell>
-                      <TableCell>{user.phone || '-'}</TableCell>
-                      <TableCell>
-                        <span className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold ${getRoleBadgeClass(user.role)}`}>
-                          {user.role}
-                        </span>
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant="outline" className={user.isActive ? 'border-emerald-200 text-emerald-600 dark:border-emerald-900 dark:text-emerald-300' : 'border-slate-300 text-slate-500'}>
-                          {user.isActive ? 'Active' : 'Inactive'}
-                        </Badge>
-                      </TableCell>
-                    </TableRow>
+                    <div className="flex items-center gap-3">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-200">
+                        <RoleIcon className="h-4 w-4" />
+                      </div>
+                      <div>
+                        <div className="font-medium text-slate-900 dark:text-white">{user.name}</div>
+                        <div className="text-xs text-slate-500 dark:text-slate-400">ID: {user.id.slice(0, 8)}...</div>
+                      </div>
+                    </div>
                   );
-                })}
-              </TableBody>
-            </Table>
-          </div>
+                },
+              },
+              { key: 'email', header: 'Email' },
+              { key: 'username', header: 'Username' },
+              { key: 'phone', header: 'Phone' },
+              {
+                key: 'role',
+                header: 'Role',
+                render: (user) => (
+                  <span className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold ${getRoleBadgeClass(user.role)}`}>
+                    {user.role}
+                  </span>
+                ),
+              },
+              {
+                key: 'status',
+                header: 'Status',
+                render: (user) => (
+                  <Badge variant="outline" className={user.isActive ? 'border-emerald-200 text-emerald-600 dark:border-emerald-900 dark:text-emerald-300' : 'border-slate-300 text-slate-500'}>
+                    {user.isActive ? 'Active' : 'Inactive'}
+                  </Badge>
+                ),
+              },
+            ]}
+          />
         </CardContent>
       </Card>
     </AdminShell>
