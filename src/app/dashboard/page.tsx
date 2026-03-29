@@ -125,7 +125,7 @@ export default async function DashboardPage({
   const selectedMonthLabel = monthDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
 
   return (
-    <AdminShell currentPath="/dashboard" title="Dashboard" description="Operational overview dengan gaya clean enterprise dan sentuhan industrial ringan.">
+    <AdminShell title="Dashboard" description="Operational overview dengan gaya clean enterprise dan sentuhan industrial ringan.">
       <div className="space-y-6">
         <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
           <div>
