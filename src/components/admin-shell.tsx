@@ -1,24 +1,28 @@
 import Link from 'next/link';
-import { Bell, LayoutDashboard, Package, Settings2, ShieldUser, Wrench, Menu } from 'lucide-react';
+import { Bell, ChevronRight, LayoutDashboard, Settings2, ShieldUser, Users2, Warehouse, MapPinned, KeyRound, Menu } from 'lucide-react';
 import { getSession } from '@/lib/session';
 import { logoutAction } from '@/app/logout/actions';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { Button } from '@/components/ui/button';
 import { AppFooter } from '@/components/app-footer';
 
-type NavItem = { href: string; label: string; icon: React.ComponentType<{ className?: string }> };
+type NavChild = { href: string; label: string; icon: React.ComponentType<{ className?: string }> };
+type NavGroup = { title: string; items: NavChild[] };
 
-const navItems: NavItem[] = [
-  { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/admin/master/users', label: 'Users', icon: ShieldUser },
-  { href: '/admin/master/sites', label: 'Sites', icon: Settings2 },
-  { href: '/admin/master/assets', label: 'Assets', icon: Wrench },
-  { href: '/admin/master/spare-parts', label: 'Spare Parts', icon: Package },
+const navGroups: NavGroup[] = [
+  {
+    title: 'Administrator',
+    items: [
+      { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+      { href: '/management-user/list-user', label: 'Management User', icon: Users2 },
+      { href: '/configuration/list-area', label: 'Configuration', icon: Settings2 },
+    ],
+  },
 ];
 
 function isActive(itemHref: string, currentPath?: string) {
   if (!currentPath) return false;
-  return currentPath === itemHref || currentPath.startsWith(`${itemHref}/`);
+  return currentPath === itemHref || currentPath.startsWith(`${itemHref}/`) || (itemHref === '/management-user/list-user' && currentPath.startsWith('/management-user')) || (itemHref === '/configuration/list-area' && currentPath.startsWith('/configuration'));
 }
 
 export async function AdminShell({ title, description, children, currentPath }: { title: string; description: string; children: React.ReactNode; currentPath?: string }) {
@@ -27,28 +31,38 @@ export async function AdminShell({ title, description, children, currentPath }: 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-50">
       <div className="flex min-h-screen">
-        <aside className="hidden w-[280px] shrink-0 border-r border-slate-200 bg-slate-900 text-slate-100 dark:border-slate-800 dark:bg-slate-900 lg:flex lg:flex-col">
+        <aside className="hidden w-[290px] shrink-0 border-r border-slate-200 bg-[#2a2c3f] text-slate-100 dark:border-slate-800 lg:flex lg:flex-col">
           <div className="border-b border-white/10 px-6 py-6">
             <p className="text-xs uppercase tracking-[0.3em] text-slate-400">WinCMMS</p>
             <h1 className="mt-3 font-heading text-3xl font-bold">Control Panel</h1>
-            <p className="mt-2 text-sm text-slate-400">Maintenance operations in one place.</p>
+            <p className="mt-2 text-sm text-slate-400">Clean enterprise maintenance workspace.</p>
           </div>
 
-          <nav className="flex-1 space-y-2 px-4 py-6">
-            {navItems.map((item) => {
-              const Icon = item.icon;
-              const active = isActive(item.href, currentPath);
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={`flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition ${active ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-300 hover:bg-white/10 hover:text-white'}`}
-                >
-                  <Icon className="h-4 w-4" />
-                  <span>{item.label}</span>
-                </Link>
-              );
-            })}
+          <nav className="flex-1 space-y-8 px-4 py-6">
+            {navGroups.map((group) => (
+              <div key={group.title}>
+                <p className="px-3 text-xs font-semibold uppercase tracking-[0.22em] text-slate-500">{group.title}</p>
+                <div className="mt-3 space-y-1">
+                  {group.items.map((item) => {
+                    const Icon = item.icon;
+                    const active = isActive(item.href, currentPath);
+                    return (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        className={`flex items-center justify-between rounded-xl px-4 py-3 text-sm font-medium transition ${active ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-300 hover:bg-white/10 hover:text-white'}`}
+                      >
+                        <span className="flex items-center gap-3">
+                          <Icon className="h-4 w-4" />
+                          <span>{item.label}</span>
+                        </span>
+                        <ChevronRight className={`h-4 w-4 ${active ? 'text-slate-400' : 'text-slate-500'}`} />
+                      </Link>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
           </nav>
 
           <div className="border-t border-white/10 p-4">
@@ -96,3 +110,14 @@ export async function AdminShell({ title, description, children, currentPath }: 
     </div>
   );
 }
+
+export const managementUserLinks = [
+  { href: '/management-user/list-user', label: 'List User', icon: ShieldUser },
+  { href: '/management-user/role-access', label: 'Role Access', icon: KeyRound },
+  { href: '/management-user/permission-role-access', label: 'Permission Role & Access', icon: ShieldUser },
+];
+
+export const configurationLinks = [
+  { href: '/configuration/list-area', label: 'List Area', icon: MapPinned },
+  { href: '/configuration/list-warehouse', label: 'List Warehouse', icon: Warehouse },
+];
