@@ -1,6 +1,7 @@
 import { ArrowUpRight, ClipboardList, Gauge, Layers3, PackageSearch, Settings2, Wrench } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { AdminShell } from '@/components/admin-shell';
+import { DashboardFilters } from '@/components/dashboard-filters';
 import { getSessionUser } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 
@@ -47,24 +48,7 @@ export default async function DashboardPage() {
             </p>
           </div>
 
-          <div className="flex flex-wrap items-center gap-3">
-            <div className="flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm shadow-sm dark:border-slate-800 dark:bg-slate-900">
-              <span className="text-slate-500 dark:text-slate-400">Plant</span>
-              <select className="bg-transparent font-medium outline-none">
-                <option>Main Plant</option>
-                <option>Warehouse</option>
-                <option>Utility Area</option>
-              </select>
-            </div>
-            <div className="flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm shadow-sm dark:border-slate-800 dark:bg-slate-900">
-              <span className="text-slate-500 dark:text-slate-400">Month</span>
-              <select className="bg-transparent font-medium outline-none">
-                <option>March 2026</option>
-                <option>February 2026</option>
-                <option>January 2026</option>
-              </select>
-            </div>
-          </div>
+          <DashboardFilters />
         </div>
 
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
