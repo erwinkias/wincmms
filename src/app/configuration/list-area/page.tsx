@@ -1,5 +1,6 @@
 import { AdminShell } from '@/components/admin-shell';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { DataTable } from '@/components/ui/data-table';
 import { requireAdminAccess } from '@/lib/auth';
 
 const areas = [
@@ -13,7 +14,19 @@ export default async function ListAreaPage() {
 
   return (
     <AdminShell title="List Area" description="Daftar area aktif di dalam sistem.">
-      <Card className="rounded-2xl"><CardHeader><CardTitle>List Area</CardTitle></CardHeader><CardContent><div className="space-y-3">{areas.map((item) => <div key={item.code} className="rounded-xl border p-4"><div className="font-medium">{item.name}</div><div className="text-sm text-muted-foreground">{item.code} • {item.site}</div></div>)}</div></CardContent></Card>
+      <Card className="rounded-2xl"><CardHeader><CardTitle>List Area</CardTitle></CardHeader><CardContent>
+        <DataTable
+          title="Area Table"
+          searchPlaceholder="Cari area, code, site..."
+          data={areas}
+          searchKeys={['code', 'name', 'site']}
+          columns={[
+            { key: 'code', header: 'Code' },
+            { key: 'name', header: 'Area Name' },
+            { key: 'site', header: 'Site' },
+          ]}
+        />
+      </CardContent></Card>
     </AdminShell>
   );
 }

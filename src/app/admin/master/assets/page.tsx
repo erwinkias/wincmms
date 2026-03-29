@@ -1,13 +1,12 @@
 import { requireAdminAccess } from '@/lib/auth';
 import { db } from '@/lib/db';
-import { DataTableCard } from '@/components/data-table-card';
 import { AdminShell } from '@/components/admin-shell';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { createAssetAction } from '@/app/admin/actions';
+import { DataTable } from '@/components/ui/data-table';
 
 export default async function AdminMasterAssetsPage() {
   await requireAdminAccess();
@@ -19,7 +18,7 @@ export default async function AdminMasterAssetsPage() {
 
   return (
     <AdminShell title="Master Assets" description="Kelola daftar asset dan statusnya.">
-      <div className="form-grid-asset">
+      <div className="grid gap-6 xl:grid-cols-[420px_1fr]">
         <Card>
           <CardHeader><CardTitle>Add Asset</CardTitle></CardHeader>
           <CardContent>
@@ -34,16 +33,15 @@ export default async function AdminMasterAssetsPage() {
           </CardContent>
         </Card>
 
-        <DataTableCard title="Assets" description="Asset yang tersimpan di database.">
-          <Table>
-            <TableHeader><TableRow><TableHead>Code</TableHead><TableHead>Name</TableHead><TableHead>Category</TableHead><TableHead>Site</TableHead><TableHead>Status</TableHead></TableRow></TableHeader>
-            <TableBody>
-              {assets.map((asset) => (
-                <TableRow key={asset.id}><TableCell>{asset.assetCode}</TableCell><TableCell>{asset.name}</TableCell><TableCell>{asset.category.name}</TableCell><TableCell>{asset.site.name}</TableCell><TableCell>{asset.status}</TableCell></TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </DataTableCard>
+        <Card><CardHeader><CardTitle>Assets</CardTitle></CardHeader><CardContent>
+          <DataTable data={assets} searchKeys={['assetCode','name','status']} searchPlaceholder="Cari asset..." columns={[
+            { key: 'assetCode', header: 'Code' },
+            { key: 'name', header: 'Name' },
+            { key: 'category', header: 'Category', render: (asset) => asset.category.name },
+            { key: 'site', header: 'Site', render: (asset) => asset.site.name },
+            { key: 'status', header: 'Status' },
+          ]} />
+        </CardContent></Card>
       </div>
     </AdminShell>
   );

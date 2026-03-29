@@ -1,13 +1,12 @@
 import { requireAdminAccess } from '@/lib/auth';
 import { db } from '@/lib/db';
-import { DataTableCard } from '@/components/data-table-card';
 import { AdminShell } from '@/components/admin-shell';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { createSiteAction } from '@/app/admin/actions';
+import { DataTable } from '@/components/ui/data-table';
 
 export default async function AdminMasterSitesPage() {
   await requireAdminAccess();
@@ -15,7 +14,7 @@ export default async function AdminMasterSitesPage() {
 
   return (
     <AdminShell title="Master Sites" description="Kelola site utama operasional.">
-      <div className="form-grid-2">
+      <div className="grid gap-6 xl:grid-cols-[380px_1fr]">
         <Card>
           <CardHeader><CardTitle>Add Site</CardTitle></CardHeader>
           <CardContent>
@@ -28,16 +27,14 @@ export default async function AdminMasterSitesPage() {
           </CardContent>
         </Card>
 
-        <DataTableCard title="Sites" description="Site aktif yang tersimpan di database.">
-          <Table>
-            <TableHeader><TableRow><TableHead>Code</TableHead><TableHead>Name</TableHead><TableHead>Address</TableHead><TableHead>Status</TableHead></TableRow></TableHeader>
-            <TableBody>
-              {sites.map((site) => (
-                <TableRow key={site.id}><TableCell>{site.code}</TableCell><TableCell>{site.name}</TableCell><TableCell>{site.address}</TableCell><TableCell>{site.isActive ? 'Active' : 'Inactive'}</TableCell></TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </DataTableCard>
+        <Card><CardHeader><CardTitle>Sites</CardTitle></CardHeader><CardContent>
+          <DataTable data={sites} searchKeys={['code','name','address']} searchPlaceholder="Cari site..." columns={[
+            { key: 'code', header: 'Code' },
+            { key: 'name', header: 'Site Name' },
+            { key: 'address', header: 'Address' },
+            { key: 'isActive', header: 'Status', render: (site) => site.isActive ? 'Active' : 'Inactive' },
+          ]} />
+        </CardContent></Card>
       </div>
     </AdminShell>
   );

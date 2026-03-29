@@ -1,13 +1,12 @@
 import { requireAdminAccess } from '@/lib/auth';
 import { db } from '@/lib/db';
-import { DataTableCard } from '@/components/data-table-card';
 import { AdminShell } from '@/components/admin-shell';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { createSparePartAction } from '@/app/admin/actions';
+import { DataTable } from '@/components/ui/data-table';
 
 export default async function AdminMasterSparePartsPage() {
   await requireAdminAccess();
@@ -15,7 +14,7 @@ export default async function AdminMasterSparePartsPage() {
 
   return (
     <AdminShell title="Master Spare Parts" description="Kelola stock dan part master.">
-      <div className="form-grid-2">
+      <div className="grid gap-6 xl:grid-cols-[380px_1fr]">
         <Card>
           <CardHeader><CardTitle>Add Spare Part</CardTitle></CardHeader>
           <CardContent>
@@ -30,16 +29,15 @@ export default async function AdminMasterSparePartsPage() {
           </CardContent>
         </Card>
 
-        <DataTableCard title="Spare Parts" description="Data part real dari database.">
-          <Table>
-            <TableHeader><TableRow><TableHead>Part Code</TableHead><TableHead>Name</TableHead><TableHead>Unit</TableHead><TableHead>Stock</TableHead><TableHead>Min Stock</TableHead></TableRow></TableHeader>
-            <TableBody>
-              {parts.map((part) => (
-                <TableRow key={part.id}><TableCell>{part.partCode}</TableCell><TableCell>{part.name}</TableCell><TableCell>{part.unit}</TableCell><TableCell>{String(part.stockQty)}</TableCell><TableCell>{String(part.minStockQty)}</TableCell></TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </DataTableCard>
+        <Card><CardHeader><CardTitle>Spare Parts</CardTitle></CardHeader><CardContent>
+          <DataTable data={parts} searchKeys={['partCode','name','unit']} searchPlaceholder="Cari spare part..." columns={[
+            { key: 'partCode', header: 'Part Code' },
+            { key: 'name', header: 'Part Name' },
+            { key: 'unit', header: 'Unit' },
+            { key: 'stockQty', header: 'Stock', render: (part) => String(part.stockQty) },
+            { key: 'minStockQty', header: 'Min Stock', render: (part) => String(part.minStockQty) },
+          ]} />
+        </CardContent></Card>
       </div>
     </AdminShell>
   );
