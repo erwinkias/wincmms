@@ -6,7 +6,9 @@ import { ThemeToggle } from '@/components/theme-toggle';
 import { Button } from '@/components/ui/button';
 import { AppFooter } from '@/components/app-footer';
 
-const navItems = [
+type NavItem = { href: string; label: string; icon: React.ComponentType<{ className?: string }> };
+
+const navItems: NavItem[] = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/admin/master/users', label: 'Users', icon: ShieldUser },
   { href: '/admin/master/sites', label: 'Sites', icon: Settings2 },
@@ -14,7 +16,12 @@ const navItems = [
   { href: '/admin/master/spare-parts', label: 'Spare Parts', icon: Package },
 ];
 
-export async function AdminShell({ title, description, children }: { title: string; description: string; children: React.ReactNode }) {
+function isActive(itemHref: string, currentPath?: string) {
+  if (!currentPath) return false;
+  return currentPath === itemHref || currentPath.startsWith(`${itemHref}/`);
+}
+
+export async function AdminShell({ title, description, children, currentPath }: { title: string; description: string; children: React.ReactNode; currentPath?: string }) {
   const session = await getSession();
 
   return (
@@ -30,11 +37,12 @@ export async function AdminShell({ title, description, children }: { title: stri
           <nav className="flex-1 space-y-2 px-4 py-6">
             {navItems.map((item) => {
               const Icon = item.icon;
+              const active = isActive(item.href, currentPath);
               return (
                 <Link
                   key={item.href}
                   href={item.href}
-                  className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-slate-300 transition hover:bg-white/10 hover:text-white"
+                  className={`flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition ${active ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-300 hover:bg-white/10 hover:text-white'}`}
                 >
                   <Icon className="h-4 w-4" />
                   <span>{item.label}</span>
